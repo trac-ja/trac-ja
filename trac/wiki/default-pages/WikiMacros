@@ -1,0 +1,185 @@
+= Trac マクロ = #TracMacros
+
+[[PageOutline]]
+
+Trac マクロとは、 Python で書かれた 'カスタム関数' によって Trac の Wiki エンジンを拡張するプラグインです。 WikiFormatting エンジンが利用可能なあらゆるコンテキストにおいて、マクロを使用することによって、動的な HTML データが挿入されます。
+
+もう 1 種類のマクロは WikiProcessors です。これは通常、 Wiki 以外のマークアップ形式と表示を取り扱うために使用し、多くは、 (ソースコードハイライトのような) より大きいブロックに使用します。
+
+== マクロの利用 == #UsingMacros
+
+マクロ呼び出しは、二つの ''角括弧 (square brackets) '' で括られた箇所です。 Python 関数のように、マクロは引数を取ることができ、括弧 (parenthesis) の中に、カンマで区切ったリストで表記します。
+
+=== 詳細なヘルプを見るには === #GettingDetailedHelp
+マクロの一覧と完全なヘルプは、 下記の[#AvailableMacros マクロ一覧] にある !MacroList マクロを使用してみることができます。
+
+簡単なマクロ一覧は `[[MacroList(*)]]` や `[[?]]` で見ることができます。
+
+特定のマクロの詳細なヘルプを参照したい場合は、 !MacroList マクロに引数渡すことによって参照することができます。 例) `[[MacroList(MacroList)]]` 。もしくは、便宜上、 `[[MacroList?]]` のようにマクロ名にクエスチョンマーク ('?') をつけることでヘルプをみることができます。
+
+
+
+=== 利用例 === #Example
+
+'Trac' で始まる Wiki ページの最近の変更履歴 3 件分を表示するマクロです:
+
+||= Wiki マークアップ =||= 表示 =||
+{{{#!td
+  {{{
+  [[RecentChanges(Trac,3)]]
+  }}}
+}}}
+{{{#!td style="padding-left: 2em;"
+[[RecentChanges(Trac,3)]]
+}}}
+|-----------------------------------
+{{{#!td
+  {{{
+  [[RecentChanges?(Trac,3)]]
+  }}}
+}}}
+{{{#!td style="padding-left: 2em;"
+[[RecentChanges?(Trac,3)]]
+}}}
+|-----------------------------------
+{{{#!td
+  {{{
+  [[?]]
+  }}}
+}}}
+{{{#!td style="padding-left: 2em"
+{{{#!html
+<div style="font-size: 80%" class="trac-macrolist">
+<h3><code>[[Image]]</code></h3>画像を Wiki 形式のテキストに組み込みます。
+
+1 番目の引数は、ファイル名を指定します。ファイルの指定は添付ファイルなど …
+<h3><code>[[InterTrac]]</code></h3>既知の <a class="wiki" href="/wiki/InterTrac">InterTrac</a> プレフィックスをリスト形式で表示します。
+<h3><code>[[InterWiki]]</code></h3>既知の <a class="wiki" href="/wiki/InterWiki">InterWiki</a> プレフィックスに関する概要のリストを表示します。
+<h3><code>[[KnownMimeTypes]]</code></h3><a class="wiki" href="/wiki/WikiProcessors">WikiProcessors</a> で処理できる既知の mime-type を表示します。
+引数が与えられた場合は、 mime-type ...</div>
+}}}
+etc.
+}}}
+
+== マクロ一覧 == #AvailableMacros
+
+''Note: 以下に示すリストはマクロドキュメントを含むものだけです。 `-OO` による最適化や、 [wiki:TracModPython mod_python] での `PythonOptimize` オプションが設定されていると表示されません。''
+
+[[MacroList]]
+
+== 世界のマクロを共有 == #Macrosfromaroundtheworld
+
+[http://trac-hacks.org/ Trac Hacks] というサイトは、コミュニティに寄稿されたマクロと [TracPlugins プラグイン] を収集し提供しています。新しいマクロを探している、共有したいマクロを作成した、などの場合は遠慮なく Trac Hacks のサイトを訪問してください。
+
+== カスタムマクロを開発する == #DevelopingCustomMacros
+マクロは、 Trac 本体と同様 [http://python.org/ Python] で書かれています。そして TracPlugins の一種として開発します。
+
+マクロの開発についての詳しい情報は [trac:TracDev リソースの開発] を参照してください。
+
+
+Trac 0.11 でマクロを作成する簡単な例を 2 つ紹介します。
+
+古いマクロと新しいマクロの違いを示す例は [http://trac.edgewall.org/browser/tags/trac-0.11/sample-plugins/Timestamp.py Timestamp.py] を参照してください。また、古いマクロから新しいマクロに移行するための情報は [http://trac.edgewall.org/browser/tags/trac-0.11/wiki-macros/README macros/README] を参照してください。
+
+=== 引数なしのマクロ === #Macrowithoutarguments
+下記のソースコードをテストするためには、このソースコードを `timestamp_sample.py` として保存し、 TracEnvironment の `plugins/` に配置しなければなりません。
+{{{
+#!python
+from datetime import datetime
+# Note: since Trac 0.11, datetime objects are used internally
+
+from genshi.builder import tag
+
+from trac.util.datefmt import format_datetime, utc
+from trac.wiki.macros import WikiMacroBase
+
+class TimeStampMacro(WikiMacroBase):
+    """Inserts the current time (in seconds) into the wiki page."""
+
+    revision = "$Rev$"
+    url = "$URL$"
+
+    def expand_macro(self, formatter, name, text):
+        t = datetime.now(utc)
+        return tag.b(format_datetime(t, '%c'))
+}}}
+
+=== 引数付きのマクロ === #Macrowitharguments
+下記のソースコードをテストするためには、このソースコードを `helloworld_sample.py` として保存し、 TracEnvironment の `plugins/` に配置しなければなりません。
+{{{
+#!python
+from genshi.core import Markup
+
+from trac.wiki.macros import WikiMacroBase
+
+class HelloWorldMacro(WikiMacroBase):
+    """Simple HelloWorld macro.
+
+    Note that the name of the class is meaningful:
+     - it must end with "Macro"
+     - what comes before "Macro" ends up being the macro name
+
+    The documentation of the class (i.e. what you're reading)
+    will become the documentation of the macro, as shown by
+    the !MacroList macro (usually used in the WikiMacros page).
+    """
+
+    revision = "$Rev$"
+    url = "$URL$"
+
+    def expand_macro(self, formatter, name, text, args):
+        """Return some output that will be displayed in the Wiki content.
+
+        `name` is the actual name of the macro (no surprise, here it'll be
+        `'HelloWorld'`),
+        `text` is the text enclosed in parenthesis at the call of the macro.
+          Note that if there are ''no'' parenthesis (like in, e.g.
+          [[HelloWorld]]), then `text` is `None`.
+        `args` are the arguments passed when HelloWorld is called using a
+        `#!HelloWorld` code block.
+        """
+        return 'Hello World, text = %s, args = %s' % \
+            (Markup.escape(text), Markup.escape(repr(args)))
+
+}}}
+
+Note: `expand_macro` は 第4パラメータに、 ''`args`'' を任意に取ることもできます。 このマクロが [WikiProcessors WikiProcessor] として呼ばれたとき、 `key=value` 形式の [WikiProcessors#UsingProcessors プロセッサパラメータ] を渡すことも可能です。もし、このパラメータを指定したとき、これらの値は、ディクショナリの中に保存され、 追加の `args` パラメータによって渡されます。一方で、マクロとして呼び出されたときは、 `args` パラメータは、 `None` として扱われます (''0.12 以降'') 。
+
+例として、このように記述した場合:
+{{{
+{{{#!HelloWorld style="polite" -silent verbose
+<Hello World!>
+}}}
+
+{{{#!HelloWorld
+<Hello World!>
+}}}
+
+[[HelloWorld(<Hello World!>)]]
+}}}
+結果はこのようになります:
+{{{
+Hello World, text = <Hello World!> , args = {'style': u'polite', 'silent': False, 'verbose': True}
+Hello World, text = <Hello World!> , args = {}
+Hello World, text = <Hello World!> , args = None
+}}}
+
+Note: `expand_macro` が返す値は、 HTML がエスケープされて '''いない''' ことに注意して下さい。期待する戻り値によっては、あなた自身でエスケープする必要があります (`return Markup.escape(result)` を使用できます)。また、戻り値として HTML が返ってくると分かっているならば、結果を (`return Markup(result)`) という風に Genshi が提供している Markup (`from genshi.core import Markup`) オブジェクトでラップすることもできます。
+
+また、`text` を Wiki としてマークアップする場合、 Wiki Formatter (`from trac.wiki import Formatter`) オブジェクトも再帰的に使用することができます。以下がサンプルです:
+
+{{{
+#!python
+from genshi.core import Markup
+from trac.wiki.macros import WikiMacroBase
+from trac.wiki import Formatter
+import StringIO
+
+class HelloWorldMacro(WikiMacroBase):
+	def expand_macro(self, formatter, name, text, args):
+		text = "whatever '''wiki''' markup you want, even containing other macros"
+		# Convert Wiki markup to HTML, new style
+		out = StringIO.StringIO()
+		Formatter(self.env, formatter.context).format(text, out)
+		return Markup(out.getvalue())
+}}}

@@ -1,0 +1,24 @@
+= !CamelCase = #CamelCase
+新しい単語として、キャピタライズした単語を連結すること。
+
+CamelCase は、従来の Wiki でハイパーリンクを記述するために行われていた慣習です。大文字の後に小文字が続いている必要があります; したがって "AlabamA" や "ABc" はリンクされません。
+[[BR]]訳注: 複数の単語を連結しないと CamelCase になりませんので、 "Abc" はリンクされません。 CamelCase の前後には半角空白文字を置く必要があります。全角空白文字ではリンクされません。また、日本語では CamelCase が使用出来ませんので `[wiki:"ページ名" ページ名]` のように明示的にリンクしてください。
+
+== Wiki のふるまいをカスタマイズする == #CustomizingtheWikibehavior
+
+Trac は従来の Wiki と同じように CamelCase をハイパーリンクとして扱います。 CamelCase でのリンクが不要な場合、何個かの設定を変更することができるようになっています:
+ * CamelCase スタイルで書かれた単語がリンクするページが存在しない場合、通常は単語をクエスチョンマーク付の灰色のリンクに置き換えますが、オプション (TracIni の [wiki:TracIni#wiki-section "[wiki]"] セクションにある `ignore_missing_pages`) を有効にすると、単にリンクしないようになります。[[BR]]
+   これは、成果物のコード内でクラス名のような形で CamelCase スタイルの名前が使用され、かつ名前に対応したページがない場合に便利です。
+ * オプション (TracIni の [wiki:TracIni#wiki-section "[wiki]"] セクションにある `split_page_name`) を有効にすると、リンクを表示するときに、 CamelCase の各単語の間に自動的にスペースを挿入します。
+ * 明示的な Wiki リンクを生成することも簡単です。 詳細は WikiPageNames を参照して下さい。
+ * 一部の機能 (コミットログメッセージの表示など) に限定して WikiFormatting を完全に使用できなくすることができます。 TracIni の [wiki:TracIni#changeset-section "[changeset]"] セクションにある `wiki_format_messages` を参照してください。
+
+設定の詳細は TracIni を参照して下さい。
+
+== CamelCase についての詳しい情報 == #MoreinformationonCamelCase
+
+ * http://c2.com/cgi/wiki?WikiCase
+ * http://en.wikipedia.org/wiki/CamelCase
+
+----
+See also: WikiPageNames, WikiNewPage, WikiFormatting, TracWiki

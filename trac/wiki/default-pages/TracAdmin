@@ -1,0 +1,65 @@
+= 管理ツール = #TracAdmin
+[[TracGuideToc]]
+
+Trac は強力なコマンドラインの管理ツールとともに配布されています。このツールで Trac を管理/設定し、インストールを用途に合わせてカスタマイズすることができます。
+
+ここに挙げる操作の一部は ''管理'' (英語版では ''Admin'') Web インタフェースでも実行することができます。バージョン 0.11 以降で [trac:WebAdmin] プラグインは Trac 本体に統合されました。
+
+== 使い方 == #Usage
+
+ほぼ全ての `trac-admin` コマンドにおいて、以下の例に示す通り、第1引数には管理対象とする TracEnvironment のパスを指定する必要があります:
+{{{
+trac-admin /path/to/projenv wiki list
+}}}
+
+唯一の例外は `help` コマンドで、 Environment を指定しない場合でも動作し、使用できるコマンドの簡易なリスト (`help` や `initenv` のような) を表示します。同じリストは、引数を指定せずに `trac-admin` コマンドを使用した場合も表示されます。
+また `trac-admin --version` を使用すると (0.12 のような形式の) Trac のバージョンを表示します。
+
+使用できるコマンドやサブコマンドの完全なリストを取得したい場合は、 Environment のパスを指定してください:
+{{{
+trac-admin /path/to/projenv help
+}}}
+
+一部のコマンドでは、 `help` のサブコマンドとしてコマンド名を指定することで、より詳細なヘルプをみることができます:
+
+{{{
+trac-admin /path/to/projenv help <command>
+}}}
+
+=== `trac-admin <targetdir> initenv` === #initenv
+
+このサブコマンドは、指定された `<targetdir>` に TracEnvironment を作成する、とても重要なコマンドです。対象のディレクトリが実行時に存在するとエラーになります。
+
+[[TracAdminHelp(initenv)]]
+
+`--inherit` オプションを使用すると、グローバルな設定ファイルを指定することができます。このファイルは複数の Environment 間で共有されます。共有する設定ファイルを後から設定したい場合は、 Environment に含まれる `conf/trac.ini` ファイルに `[inherit] file` オプションを設定してください。 Environment 作成時のオプションでグローバルな設定ファイルを指定すると、自動的に `conf/trac.ini` ファイルにオプションが記載され、重複するオプションについては作成時に設定する必要がなくなるというメリットがあります。
+詳細は [TracIni#GlobalConfiguration TracIni#グローバルな設定] を参照してください。
+
+Note: Trac のバージョン 0.11 では `initenv` の最終引数 `<templatepath>` が廃止されました。この引数は以前のバージョンでは `templates` ディレクトリの場所を指定するのに使用されていました。現在のコマンドはワンライナーでは '`trac-admin /path/to/trac/ initenv <projectname> <db> <repostype> <repospath>`' となるので、以前と同じ引数で起動すると ''''`Wrong number of arguments to initenv: 4`'''' というエラーが発生します。このエラーが発生した場合、 '''古い''' バージョンの Trac に同梱されている `trac-admin` スクリプトが動いていると考えられます。
+
+== 対話モード == #InteractiveMode
+
+`trac-admin` は TracEnvironment のパスだけを引数に指定して起動した場合、対話モードになります。
+プロンプトから入力したコマンドは指定した TracEnvironment に対して実行します。
+コマンドを Tab キーで補完する機能と、最後に実行したコマンドを繰り返す機能が提供されます (非 Windows 環境の場合、 Python が `readline` モジュールを使用できる必要があります) 。
+
+一度対話モードで起動すると、特定のコマンドのヘルプやコマンドのサブセットを見ることができます:
+
+例えば、 `resync` コマンドの説明を得るためには以下のように実行します:
+{{{
+> help resync
+}}}
+
+Wiki に関するすべてのコマンドのヘルプを得るためには、以下のように実行します:
+{{{
+> help wiki
+}}}
+
+== 完全なコマンドリファレンス == #FullCommandReference
+
+以下に示すのは `trac-admin` で標準的に使用できる全てのコマンドの詳細なヘルプです。 `trac-admin <yourenv> help` で表示されるリストとは一致しないこともありますが、 Environment で無効化されているコンポーネントに由来するコマンドは表示されず、逆に  Environment で有効化されているプラグインによって提供されるコマンドが別途表示されるためです。
+
+[[TracAdminHelp()]]
+
+----
+See also: TracGuide, TracBackup, TracPermissions, TracEnvironment, TracIni, [trac:TracMigrate TracMigrate]

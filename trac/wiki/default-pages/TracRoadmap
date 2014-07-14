@@ -1,0 +1,47 @@
+= ロードマップ = #TheTracRoadmap
+[[TracGuideToc]]
+
+ロードマップ (英語版では Roadmap) は [wiki:TracTickets チケットシステム] のビューを提供します。プロジェクトの将来の開発計画と管理の役に立つでしょう。
+
+== ロードマップのビュー == #TheRoadmapView
+
+基本的に、ロードマップは将来のマイルストーン (英語版では Milestone) のリストに過ぎません。マイルストーンの説明、例えば主たる開発方針などを WikiFormatting を使用して追加することができます。その上で、あるマイルストーンのターゲットとなるチケットは集められ、未解決チケットと解決済みチケットの比率がマイルストーンの進捗インジケータに表示されます。 [trac:TracRoadmapCustomGroups チケットのグループ化をカスタマイズする] ことによって、プログレスバーに複数のステータスを表示させる事ができます。(訳注: TracIni#milestone-groups-section を参照してください)
+
+ロードマップでは、 ''完了したマイルストーン'' や ''期限のないマイルストール'' の表示 / 非表示を選択することができます。 ''完了したマイルストーンも表示する'' と ''期限のないマイルストールを表示しない'' が同時に指定された場合、期限はないが ''完了した'' マイルストーンは、表示される __でしょう__ 。
+
+== マイルストーンのビュー == #TheMilestoneView
+
+各マイルストーンには概要を追加することができます ( WikiFormatting 使用可 ) 。例えば、主とした目的を記述することができます。加えて、あるマイルストーンをターゲットとしたチケットをまとめて、未解決と解決済みのチケットの割合がマイルストーンのプログレスバーに表示されます。さらに、 [trac:TracRoadmapCustomGroups チケットのグルーピングをカスタマイズしたり] 複数のチケットステータスをプログレスバーに表示することが可能です。
+
+特定のマイルストーンのページを見ることによって、簡単な統計に掘り下げることは可能です。デフォルトでは、未解決/解決済みの比率がコンポーネントごとにグループ化され、表示されています。他の基準、例えば担当者や重要度で再グループ化することができます。チケットの番号は一致するチケットをリストする [wiki:TracQuery カスタムクエリ] にリンクされています。
+
+== ロードマップ管理 == #RoadmapAdministration
+
+適切な権限を持っているならば、 Web インタフェース ( ロードマップとマイルストーンページ ) や Web アドミニストレーションインタフェースまたは、 `trac-admin` を使用して、マイルストーンの追加、編集、削除を行なうことができます。
+
+'''Note:''' マイルストーンの概要は `trac-admin` を使って編集することは現在できません。
+
+== iCalendar 対応 == #iCalendarSupport
+
+ロードマップは、 [http://www.ietf.org/rfc/rfc2445.txt iCalendar] フォーマットに対応していますので、好みのカレンダーアプリケーションを使って、計画したマイルストーンと関係する課題を追いかけることが出来ます。多くのカレンダーアプリケーションが iCalendar をサポートしています。
+ * [http://www.apple.com/ical/ Apple iCal] Mac OS X 対応
+ * [http://www.mozilla.org/projects/calendar/ Mozilla Calendar] 複数のプラットフォームで使用可
+ * [http://chandlerproject.org Chandler]
+ * [http://kontact.kde.org/korganizer/ Korganizer] ([http://www.kde.org/ KDE] プロジェクトのカレンダーアプリケーション)
+ * [http://www.novell.com/de-de/products/desktop/features/evolution.html Evolution] iCalendar 対応
+ * [http://office.microsoft.com/en-us/outlook/ Microsoft Outlook] iCalendar ファイルの読み込み可 (これは、 Outlook の新しい静的カレンダーとして見えます)
+ * [https://www.google.com/calendar/ Google Calendar]
+
+ロードマップを購読するために、ロードマップのページにある iCalendar のリンクをコピーします (リンクはページの下の方にあります)。そして、カレンダーアプリケーションで "リモートカレンダーを購読" (またはこれに似たアクション) を行い、コピーした URL を貼り付けるだけです。
+
+'''Note:''' カレンダーの中に (TO-DOアイテムとして) チケットが含まれているので、リンクをコピーするときに認証されている必要があります。あなた自身が担当者で、マイルストーンに関係するチケットのみ見ることができます。
+
+'''Note:''' Google Calender にマイルストーンを含む場合、URL を書き直す必要があるかもしれません。
+{{{
+RewriteEngine on
+RewriteRule ([^/.]+)/roadmap/([^/.]+)/ics /$1/roadmap?user=$2&format=ics
+}}}
+
+より詳しい iCalendar についての情報は [http://en.wikipedia.org/wiki/ICalendar Wikipedia] で見つけることが出来ます。
+----
+See also: TracTickets, TracReports, TracQuery, [trac:TracRoadmapCustomGroups]

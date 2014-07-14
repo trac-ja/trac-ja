@@ -1,0 +1,344 @@
+= Wiki テキスト内で HTML を使用する = #UsingHTMLinWikiText
+
+`#!html` [wiki:WikiProcessors Wiki プロセッサ] の機能によって、 Trac では Wiki コンテキスト内での HTML 利用が可能です。
+
+しかし、 HTML は well-formed でなければいけないという制約があります。
+とりわけ、 1 つ目の `#!html` ブロックに開始タグを挿入し、その後
+普通の wiki テキストを続けて、2つ目の
+`#!html` ブロックに 1 つ目のブロックに挿入した開始タグに対応する終了タグを挿入することはできません。
+
+幸いなことに、 <div> や <span> やもっと複雑なスタイルを使用して
+任意の Wiki テキストを含んだ表を作成する場合は、強力な代替手段があります:
+表専用の `#!div`, `#!span`, `#!table`, `#!tr`, `#!td`, `#!th` ブロックを使用することです。
+
+これらの Wiki プロセッサはビルトインされているので、追加で他のパッケージをインストールする必要はありません。
+
+== `#!html` の使い方 == #HowtoUseHTML
+テキストブロックが HTML として取り扱われるよう、 Wiki エンジンに ''html'' プロセッサを使用するという情報を与えます。
+
+||= Wiki マークアップ =||= 表示 =||
+{{{#!td
+  {{{
+  {{{
+  #!html
+  <h1 style="text-align: right; color: blue">HTML テスト</h1>
+  }}}
+  }}}
+}}}
+{{{#!td style="padding-left: 2em"
+  {{{
+  #!html
+  <h1 style="text-align: right; color: blue">HTML テスト</h1>
+  }}}
+}}}
+
+Trac が HTML コードを表示する前にサニタイズすることに注意して下さい。つまり Javascript のイベントハンドラのような潜在的に危険なコードを使おうとしても、出力から削除されるということです。
+
+0.11 以降では、フィルタリングは Genshi が行いますので、出力は well-formed な HTML の断片でなければなりません。 上記イントロダクションで記述したとおり、 <div> を開く HTML ブロックと閉じる HTML ブロックの 2 つを使って Wiki テキストを囲むことができなくなります。
+<div> タグ内部に含まれている Wiki テキストをラップする新しい方法として、 `#!div` Wiki プロセッサを使用する方法があります。
+
+== `#!div` and `#!span` ブロックの使い方 == #HowtoUseDivSpan
+
+||= Wiki マークアップ =||= 表示 =||
+{{{#!td
+  {{{
+  {{{
+  #!div class="important"
+  **important** は定義済みのクラスです。
+  }}}
+  }}}
+  {{{
+  {{{
+  #!div style="border: 1pt dotted; margin: 1em"
+  **wikipage** はクラスが指定されていない場合に
+  使用される別の定義済みクラスです。
+  }}}
+  }}}
+  {{{
+  {{{
+  #!div class="compact" style="border: 1pt dotted; margin: 1em"
+  **compact** は最小限に `<div>` 内のパディングを
+  軽減するための別の定義済みクラスです。
+  }}}
+  }}}
+  {{{
+  {{{
+  #!div class="wikipage compact" style="border: 1pt dotted"
+  クラスは組み合わせることができます (ここでは **wikipage** と **compact**)
+  この場合の結果は、//垂直方向の// パディングが
+  軽減されますが、見出しのため水平方向のスペースが
+  残っています。
+  }}}
+  }}}
+  {{{
+  {{{
+  #!div class="" style="border: 1pt dotted; margin: 1em"
+  明確にクラスを指定しないことは、
+  属性にクラスを指定しないことと同じでは //なく// 、
+  デフォルトクラスの //wikipage// を削除するようなものです。
+  }}}
+  }}}
+}}}
+{{{#!td style="padding-left: 2em"
+
+  {{{
+  #!div class="important"
+  **important** は 定義済みのクラスです。
+  }}}
+
+  {{{
+  #!div style="border: 1pt dotted; margin: 1em"
+  **wikipage** はクラスが指定されていない場合に
+  使用される別の定義済みクラスです。
+  }}}
+
+  {{{
+  #!div class="compact" style="border: 1pt dotted; margin: 1em"
+  **compact** は最小限に `<div>` 内のパディングを
+  軽減するための別の定義済みクラスです。
+  }}}
+
+  {{{
+  #!div class="wikipage compact" style="border: 1pt dotted"
+  クラスは組み合わせることができます (ここでは **wikipage** と **compact**)
+  この場合の結果は、//垂直方向の// パディングが
+  軽減されますが、見出しのため水平方向のスペースが
+  残っています。
+  }}}
+
+  {{{
+  #!div class="" style="border: 1pt dotted; margin: 1em"
+  明確にクラスを指定しないことは、
+  属性にクラスを指定しないことと同じでは //なく// 、
+  デフォルトクラスの //wikipage// を削除するようなものです。
+  }}}
+
+}}}
+
+Note: `#!div` ブロックの内容に 1 つもしくは複数の段落が含まれる場合、上下にマージンが追加されます。これは、上記の例にある通り、上下のパディングをもたらします。コンテンツの上下のマージンを削除するためには、`#!div` ブロックの class 属性に `compact` を追加して下さい。 `wikipage` と `compact` の他に予め定義された値は、 `important` です。これを指定すると段落を目立たせることができます。 例えば、その他の CSS のクラスは、 `site/style.css` ファイル経由で定義することができます。 [TracInterfaceCustomization#SiteAppearance サイトの外観] を参照して下さい。
+
+span については、むしろマクロ呼び出しのシンタックスを使用するべきです:
+||= Wiki マークアップ =||
+{{{#!td
+  {{{
+  Hello
+  [[span(''WORLD'' (click [#anchor here]), style=color: green; font-size: 120%, id=anchor)]]!
+  }}}
+}}}
+|---------------------------------------------------------------------------------
+||= 表示 =||
+{{{#!td style="padding-left: 2em"
+  Hello
+  [[span(''WORLD'' (click [#anchor here]), style=color: green; font-size: 120%, id=anchor)]]!
+}}}
+
+== `#!td` とその他の表関連のプロセッサの使い方 == #Tables
+
+実際に、それぞれのテーブル行やヘッダのセルを作成するためには、 `#!td` や `#!th` がメインのプロセッサになります。その他、 `#!table` や `#!tr` プロセッサは`#!td` や `#!th` プロセッサがこれらのプロセッサの役割を自動的に行なってしまうため、テーブル構造を紹介するためには必要ではありません。行セパレータ `|-` を新しい行を始める際に必要に応じて使うことができます。しかし場合によっては、 `#!tr` ブロックを使用する方が好ましいかもしれません。 `#!tr` ブロックの方がより正式なグルーピングを提供することができ、より多くのインデントレベルを提供できる可能性があります。`#!table` や `#!tr` プロセッサを使用する主な目的は、 ''style'' や ''valign'' などで HTML の属性を指定できることです。
+
+||= Wiki マークアップ =||= 表示 =||
+{{{#!td
+ {{{
+ リッチコンテンツを含んだ 2x2 の簡単な表:
+ {{{#!th align=left
+  - 左
+  - ヘッダ
+ }}}
+ {{{#!th align=left
+  - 右
+  - ヘッダ
+ }}}
+ |----------------------------------
+ {{{#!td style="background: #ffd"
+  - 左
+  - 内容
+ }}}
+ {{{#!td style="vertical-align: top"
+ 右内容
+ }}}
+ |----------------------------------
+ || ... パイプでつなげたセルも||\
+ ||くっつけることができます ||
+ {{{#!td colspan=2
+ あなたのコンテンツにより適切なスタイルを
+ 選択して下さい。
+
+ パイプで表の列をつなげるシンタックスについては、
+ [WikiFormatting#Tables WikiFormatting] を参照して下さい。
+ }}}
+
+ もし、表そのものに属性を追加する
+ 必要がある場合...
+
+ {{{
+ #!table style="border:none;text-align:center;margin:auto"
+   {{{#!tr ====================================
+     {{{#!th style="border: none"
+     左 ヘッダ
+     }}}
+     {{{#!th style="border: none"
+     右 ヘッダ
+     }}}
+   }}}
+   {{{#!tr ==== style="border: 1px dotted grey"
+     {{{#!td style="border: none"
+     1.1
+     }}}
+     {{{#!td style="border: none"
+     1.2
+     }}}
+   }}}
+   {{{#!tr ====================================
+     {{{#!td style="border: none"
+     2.1
+     }}}
+     {{{#!td
+     2.2
+     }}}
+   }}}
+ }}}
+
+
+ }}}
+}}}
+{{{#!td valign=top
+リッチコンテンツを含んだ 2x2 の簡単な表:
+{{{#!th align=left
+ - 左
+ - ヘッダ
+}}}
+{{{#!th align=left
+ - 右
+ - ヘッダ
+}}}
+|----------------------------------
+{{{#!td style="background: #ffd"
+ - 左
+ - 内容
+}}}
+{{{#!td style="vertical-align: top"
+右内容
+}}}
+|----------------------------------
+|| ... パイプでつなげたセルも||\
+||くっつけることができます ||
+{{{#!td colspan=2
+あなたのコンテンツにより適切なスタイルを
+選択して下さい。
+
+パイプで表の列をつなげるシンタックスについては、
+[WikiFormatting#Tables WikiFormatting] を参照して下さい。
+}}}
+
+もし、表そのものに属性を追加する
+必要がある場合...
+
+{{{
+#!table style="border:none;text-align:center;margin:auto"
+  {{{#!tr ====================================
+    {{{#!th style="border: none"
+    左 ヘッダ
+    }}}
+    {{{#!th style="border: none"
+    右 ヘッダ
+    }}}
+  }}}
+  {{{#!tr ==== style="border: 1px dotted grey"
+    {{{#!td style="border: none"
+    1.1
+    }}}
+    {{{#!td style="border: none"
+    1.2
+    }}}
+  }}}
+  {{{#!tr ====================================
+    {{{#!td style="border: none"
+    2.1
+    }}}
+    {{{#!td
+    2.2
+    }}}
+  }}}
+}}}
+}}}
+
+Note: デフォルトの表設定では、 "wiki" の CSS クラスが適用されます。そして、この CSS クラスはヘッダのセルに対して典型的な見た目と表とセルのデフォルトの罫線設定を提供します ( このページの表にあるとおりです) このクラスを削除することによって (`#!table class=""`) 表の表示方法を自由に設定することができるようになります。特に、表、行、セルのいずれにも罫線を設定しない場合、いたるところで `style="border: no"` を指定するよりこの方法を使用したほうが、同じ効果を得るのにより効果的な方法となります。
+
+{{{#!table class=""
+||= Wiki マークアップ =||= 表示 =||
+ {{{#!td
+  {{{
+  {{{#!table class=""
+  ||  0||  1||  2||
+  || 10|| 20|| 30||
+  || 11|| 22|| 33||
+  ||||||=  数字  =||
+  }}}
+  }}}
+ }}}
+ {{{#!td
+  {{{#!table class=""
+  ||  0||  1||  2||
+  || 10|| 20|| 30||
+  || 11|| 22|| 33||
+  ||||||=  数字  =||
+  }}}
+ }}}
+}}}
+
+他のクラスを代替手段として指定することもできます ([TracInterfaceCustomization#SiteAppearance site/style.css] であなた自身のスタイルシートを定義できることを忘れないで下さい)
+
+||= Wiki マークアップ =||= 表示 =||
+{{{#!td
+  {{{
+  {{{#!table class="listing"
+  ||  0||  1||  2||
+  || 10|| 20|| 30||
+  || 11|| 22|| 33||
+  ||||||=  数字  =||
+  }}}
+  }}}
+}}}
+{{{#!td
+  {{{#!table class="listing"
+  ||  0||  1||  2||
+  || 10|| 20|| 30||
+  || 11|| 22|| 33||
+  ||||||=  数字  =||
+  }}}
+}}}
+
+
+== HTML コメント ==#HTMLcomments
+HTML コメントは `html` プロセッサの出力から除外されます。 HTML コメントを wiki ページに追加するために、 `htmlcomment` プロセッサを使用して下さい (0.12 以降) 。例えば、下記のようなコードブロックになります:
+||= Wiki マークアップ =||
+{{{#!td
+  {{{
+  {{{
+  #!htmlcomment
+  このブロックは HTML コメントとして処理されます。
+  <tags> や &entities; を含めることができ、これらは出力時にエスケープされません。
+  }}}
+  }}}
+}}}
+|---------------------------------------------------------------------------------
+||= 表示 =||
+{{{#!td
+  {{{
+  <!--
+  このブロックは HTML コメントとして処理されます。
+  <tags> や &entities; を含めることができ、これらは出力時にエスケープされません。
+  -->
+  }}}
+}}}
+
+Note: "`--`" という文字の並びは、 HTML コメントでは使用できません。レンダリング時にエラーが発生します。
+
+
+== より詳しい情報 == #MoreInformation
+
+ * http://www.w3.org/ -- World Wide Web Consortium
+ * http://www.w3.org/MarkUp/ -- HTML Markup Home Page
+
+----
+See also:  WikiProcessors, WikiFormatting, WikiRestructuredText

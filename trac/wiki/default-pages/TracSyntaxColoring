@@ -1,0 +1,114 @@
+= ソースコードのシンタックスカラーリング = #SyntaxColoringofSourceCode
+Trac は [WikiProcessors#CodeHighlightingSupport wiki プロセッサ] ブロック内の Wiki 形式のテキストと [wiki:TracBrowser リポジトリブラウザ] での、ソースコードの言語特有のシンタックスハイライトに対応しています。
+
+Trac では色付けを行うために、とても多くのプログラミング言語に対応している外部ライブラリを使用しています。
+
+現在、 Trac は以下にあげるパッケージを 1 つ以上使用して、シンタックスハイライトを実現しています:
+
+ * [http://pygments.pocoo.org/ Pygments] 最も推奨するシステムです。というのもカバーしているプログラミング言語、構造化テキストが多いこととサポート体制が活発であるからです
+ * [http://www.codento.com/people/mtr/genscript/ GNU Enscript] 通常 UNIX で利用できますが、 Windows ではサポートされていません
+ * [http://silvercity.sourceforge.net/ SilverCity] レガシーなシステムです。いくつかのバージョンには [trac:TracFaq#why-is-my-css-code-not-being-highlighted-even-though-i-have-silvercity-installed 問題があります]
+
+
+シンタックスカラーリングを有効にするには、これらのパッケージのどれか 1 つまたは 1 つ以上をインストールするだけです ( 下記の [#ExtraSoftware その他のソフトウェア] を参照 )
+もし、これらのパッケージの中で適用できるものがなければ、 Trac はプレーンテキストとしてデータを表示します。
+
+
+=== Pygments について === #AboutPygments
+
+Trac 0.11 以降で、 [http://pygments.org/ pygments] はデフォルトのハイライトパッケージとなりました。ハイライト用のライブラリがピュアな Python コードで書かれていて、とても速く、拡張しやすく [http://pygments.org/docs/ ドキュメントが豊富です] 。
+
+Pygments のデフォルトのスタイルは、 trac.ini の [TracIni#mimeviewer-section mime-viewer] セクションで指定できます。デフォルトのスタイルは、 [/prefs/pygments 個人設定のシンタックスハイライトタブ] 上のスタイルを設定することで、オーバーライドされます。
+
+Pygments の構文解析エンジンが対応するリストは毎週のように更新されています。以下のリストが古い可能性は非常に高いです。 正確には [http://pygments.org/docs/lexers/ supported lexers] のページを参照してください。
+
+
+== 対応しているシンタックスハイライト == #SyntaxColoringSupport
+
+=== 対応している MIME タイプ === #KnownMIMETypes
+
+[[KnownMimeTypes]]
+
+Note: 高度なコンテンツはシンタックスハイライトの代わりに直接レンダリングされるかもしれません。これはインストールされている予備のパッケージ及び設定したコンポーネントによって決まります。例えば、`text/x-rst` ドキュメントでは、`docutils` がインストールされていて、`trac.mimeview.rst.ReStructuredTextRenderer` が無効になっておらず、他にシンタックスハイライトが存在するような場合、`docutils` を通してレンダリングされます。
+
+同様の方法で、 MIME タイプ `text/x-trac-wiki` のドキュメントは Trac Wiki フォーマットを使ってレンダリングされます。ただし、 `trac.mimeview.api.WikiTextRenderer` コンポーネントは無効とされます。
+
+HTML ドキュメントは `render_unsafe_html` が TracIni で有効に設定されている場合に限り、直接レンダリングされます。 (ドキュメントがどこからくるかによって異なるセキュリティ上の懸念がある場合、これらの設定は、複数のセクションに存在します)。もし HTML ドキュメントがレンダリングを行わず、シンタックスハイライトなるよう保証したいのであれば、 MIME タイプ `text/xml` を使用してください。
+
+'svn:mime-type' 属性が 'text/plain' のように MIME タイプで設定されている場合、例え 'java' で書かれたファイルであっても色づけされません。
+
+=== ハイライトパッケージがサポートする言語 === #language-supported
+
+このリストはほんの一例です:
+
+||                 ||= !SilverCity   =||= Enscript      =||= Pygments =||
+|| Ada             ||                 ||  ✓              ||     ||
+|| Asm             ||                 ||  ✓              ||     ||
+|| Apache Conf     ||                 ||                 ||  ✓  ||
+|| ASP             ||  ✓              ||  ✓              ||     ||
+|| C               ||  ✓              ||  ✓              ||  ✓  ||
+|| C#              ||                 ||  ✓ ^[#a1 (1)]^  ||  ✓  ||
+|| C++             ||  ✓              ||  ✓              ||  ✓  ||
+|| CMake           ||  ?              ||  ?              ||  ✓  ||
+|| Java            ||  ✓ ^[#a2 (2)]^  ||  ✓              ||  ✓  ||
+|| Awk             ||                 ||  ✓              ||     ||
+|| Boo             ||                 ||                 ||  ✓  ||
+|| CSS             ||  ✓              ||                 ||  ✓  ||
+|| Python Doctests ||                 ||                 ||  ✓  ||
+|| Diff            ||                 ||  ✓              ||  ✓  ||
+|| Eiffel          ||                 ||  ✓              ||     ||
+|| Elisp           ||                 ||  ✓              ||     ||
+|| Fortran         ||                 ||  ✓ ^[#a1 (1)]^  ||  ✓  ||
+|| Haskell         ||                 ||  ✓              ||  ✓  ||
+|| Genshi          ||                 ||                 ||  ✓  ||
+|| HTML            ||  ✓              ||  ✓              ||  ✓  ||
+|| IDL             ||                 ||  ✓              ||     ||
+|| INI             ||                 ||                 ||  ✓  ||
+|| Javascript      ||  ✓              ||  ✓              ||  ✓  ||
+|| Lua             ||                 ||                 ||  ✓  ||
+|| m4              ||                 ||  ✓              ||     ||
+|| Makefile        ||                 ||  ✓              ||  ✓  ||
+|| Mako            ||                 ||                 ||  ✓  ||
+|| Matlab ^[#a3 (3)]^  ||             ||  ✓              ||  ✓  ||
+|| Mygthy          ||                 ||                 ||  ✓  ||
+|| Objective-C     ||                 ||  ✓              ||  ✓  ||
+|| OCaml           ||                 ||                 ||  ✓  ||
+|| Pascal          ||                 ||  ✓              ||  ✓  ||
+|| Perl            ||  ✓              ||  ✓              ||  ✓  ||
+|| PHP             ||  ✓              ||                 ||  ✓  ||
+|| PSP             ||  ✓              ||                 ||     ||
+|| Pyrex           ||                 ||  ✓              ||     ||
+|| Python          ||  ✓              ||  ✓              ||  ✓  ||
+|| Ruby            ||  ✓              ||  ✓ ^[#a1 (1)]^  ||  ✓  ||
+|| Scheme          ||                 ||  ✓              ||  ✓  ||
+|| Shell           ||                 ||  ✓              ||  ✓  ||
+|| Smarty          ||                 ||                 ||  ✓  ||
+|| SQL             ||  ✓              ||  ✓              ||  ✓  ||
+|| Troff           ||                 ||  ✓              ||  ✓  ||
+|| TCL             ||                 ||  ✓              ||     ||
+|| Tex             ||                 ||  ✓              ||  ✓  ||
+|| Verilog         ||  ✓ ^[#a2 (2)]^  ||  ✓              ||     ||
+|| VHDL            ||                 ||  ✓              ||     ||
+|| Visual Basic    ||                 ||  ✓              ||  ✓  ||
+|| VRML            ||                 ||  ✓              ||     ||
+|| XML             ||  ✓              ||                 ||  ✓  ||
+
+
+
+''[=#a1 (1)] Enscript のパッケージには含まれていません。  以下のハイライトルールを追加することが可能です。
+[http://neugierig.org/software/ruby/ Ruby],
+[http://wiki.hasno.info/index.php/Csharp.st C#],
+[http://wiki.hasno.info/index.php/F90.st Fortran 90x/2003]
+
+''[=#a2 (2)] Silvercity 0.9.7 は 2006-11-23 にリリースされました。
+
+''[=#a3 (3)] デフォルトで、 `.m` ファイルは Objective-C のファイルだと解釈されます。 `.m` ファイルを MATLAB ファイルとして扱うためには、 "text/matlab:m" を [wiki:TracIni#mimeviewer-section "trac.ini の [mimeviewer] セクション"] 内、 "mime_map" の設定に追加してください。
+
+== その他のソフトウェア == #ExtraSoftware
+ * GNU Enscript — http://directory.fsf.org/GNU/enscript.html
+ * GNU Enscript for Windows — http://gnuwin32.sourceforge.net/packages/enscript.htm
+ * !SilverCity — http://silvercity.sf.net/
+ * **Pygments — http://pygments.org/**
+
+----
+See also: WikiProcessors, WikiFormatting, TracWiki, TracBrowser

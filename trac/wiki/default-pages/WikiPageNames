@@ -1,0 +1,42 @@
+= Wiki ページ名 = #WikiPageNames
+[[TracGuideToc]]
+
+Wiki のページ名には通常、 CamelCase の仕様に従います。 Wiki テキストの中では、 CamelCase に相当するすべての単語が、同じ名前を持つ Wiki ページへのハイパーリンクになります。
+
+CamelCase のページ名は以下のルールに沿っていなければなりません:
+
+ 1. ページ名は '''アルファベットだけ''' で構成されていなければなりません。数字、空白文字、句点、アンダースコア ( _ ) などは許されていません。
+ 1. ページ名は少なくとも2つの大文字が含まれていなければなりません。
+ 1. 最初の文字は大文字でなければなりません。
+ 1. 大文字に続いて1文字以上、小文字が続いていなければなりません。
+ 1. スラッシュ ( / ) をページ名に含めることが許されています (階層構成を表すときなど)。
+
+CamelCase ルールに適合しない Wiki ページを生成したいならば、以下のシンタックスを使用することによってできます:
+{{{
+ * [wiki:Wiki_page], [wiki:ISO9000],
+   ラベル付: [wiki:ISO9000 ISO 9000 準拠]
+ * [wiki:"Space Matters"]
+   ラベル付: [wiki:"Space Matters" all about white space]
+ * またはシンプルに: ["WikiPageName"]s
+ * さらに, 新しい [[WikiCreole link style]]
+   ラベル付: [[WikiCreole link style|WikiCreole style links]]
+}}}
+
+このように表示されます:
+ * [wiki:Wiki_page], [wiki:ISO9000],
+   ラベル付: [wiki:ISO9000 ISO 9000 準拠]
+ * [wiki:"Space Matters"] ''(ページ名にスペースが含まれています)''
+   ラベル付: [wiki:"Space Matters" all about white space]
+ * または、シンプルに: ["WikiPageName"]s ''(古い !MoinMoin 内部の自由なリンク形式)''
+ * さらに, 新しい [[WikiCreole link style]]
+   ラベル付: [[WikiCreole link style|WikiCreole style links]]
+   ''(0.12 以降, 現在 !MoinMoin においても採用されています)''
+
+
+Trac-0.11 以降では、 Wiki ページの特定 ''バージョン'' にリンクすることができます。リポジトリのファイルの特定バージョンにリンクするときと同じ要領で WikiStart@1 のように記述してください。
+
+CamelCase の名前をクオートすることによって [TracLinks Trac リンク] として解釈されないようにすることができます。 [TracLinks#EscapingLinks リンクをエスケープする]を参照して下さい。
+
+上記の例でも見られるとおり、ページ内の特定のセクションへのリンクを追加するために、 Wiki ページにアンカーをつけることもできます。アンカーはセクションのヘッダにマウスポインタをおくことによって簡単に見ることができます。そして、セクションヘッダ行末にある [[html(&para;)]] をクリックできます。アンカーは通常自動で作成されますが、明示的に指定することも可能です: [WikiFormatting#using-explicit-id-in-heading 明示的な id] を参照して下さい。
+----
+See also: WikiNewPage, WikiFormatting, TracWiki, TracLinks

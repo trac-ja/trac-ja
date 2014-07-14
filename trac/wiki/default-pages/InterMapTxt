@@ -1,0 +1,99 @@
+= InterMapTxt = #InterMapTxt
+
+== InterWiki のプレフィックスを定義するページです == #ThisistheplacefordefiningInterWikiprefixes
+
+このページは MeatBall:InterMapTxt ページをモデルとしています。
+Trac ではマッピング文字列の後ろに任意のコメントをつけることができます。
+
+
+Trac はこのページを特別に解釈し、 
+!InterWiki の柔軟かつ動的なリンクに対応します。
+
+このページでは、最初に見つかったライン区切り (訳注: 水平ライン) より下にあるコードブロック (訳注: 整形済みテキスト) は 
+!InterWiki の仕様に従った行のリストとして解釈されます:
+{{{
+プレフィックス <space> URL [<space> # コメント]
+}}}
+
+URL で `$1`, `$2` などを使用すると、複数の引数をもつ 
+InterWiki リンクを作成することができます。例えば、 Trac:ticket:40 などです。
+この URL には任意のコメントをつけることができます。
+コメントはプレフィックスを使用するリンクを装飾するためにも
+使用されます。(訳注: title 属性に使用されます。マウスオーバすると表示されます)
+
+新規 !InterWiki リンクは下のリストに追加すると、直ちに使用することができます。
+しかしながら、 ''削除'' もまた、直ちに適用されます。
+そのため、プレフィックスを使用不可にするためには、コメントアウトを使用するほうがいいかもしれません。
+
+!InterWiki のプレフィックスでは大文字 / 小文字は区別されません。
+
+
+== プレフィックスのリスト == #ListofActivePrefixes
+
+[[InterWiki]]
+
+
+----
+
+== プレフィックスの定義 == #PrefixDefinitions
+
+{{{
+PEP     http://www.python.org/peps/pep-$1.html    # Python Enhancement Proposal 
+PythonBug    http://bugs.python.org/issue$1       # Python Issue #$1
+Python-issue http://bugs.python.org/issue$1       # Python Issue #$1
+
+Trac-ML  http://thread.gmane.org/gmane.comp.version-control.subversion.trac.general/ # Message $1 in Trac Mailing List
+trac-dev http://thread.gmane.org/gmane.comp.version-control.subversion.trac.devel/   # Message $1 in Trac Development Mailing List
+
+Mercurial http://www.selenic.com/mercurial/wiki/index.cgi/ # the wiki for the Mercurial distributed SCM
+
+RFC       http://tools.ietf.org/html/rfc$1          # IETF's RFC $1
+ISO       http://en.wikipedia.org/wiki/ISO_         # ISO Standard $1 in Wikipedia
+kb        http://support.microsoft.com/kb/$1/en-us/ # Article $1 in Microsoft's Knowledge Base
+
+chromium-issue  http://code.google.com/p/chromium/issues/detail?id=
+
+Django      http://code.djangoproject.com/intertrac/ # Django's Trac
+
+CreoleWiki   http://wikicreole.org/wiki/
+Creole1Wiki  http://wikicreole.org/wiki/
+Creole2Wiki  http://wiki.wikicreole.org/
+
+MediaWiki    http://www.mediawiki.org/wiki/
+
+SO  http://stackoverflow.com/questions/ # Question $1 in StackOverflow
+
+kwquery      /query?group=status&keywords=~  # Custom query for tickets matching keyword $1
+
+#
+# InterWiki プレフィックスを適当にピックアップしたリスト 
+#
+Acronym          http://www.acronymfinder.com/af-query.asp?String=exact&Acronym=
+C2find           http://c2.com/cgi/wiki?FindPage&value=
+Cache            http://www.google.com/search?q=cache:
+CPAN             http://search.cpan.org/perldoc?
+DebianBug        http://bugs.debian.org/
+DebianPackage    http://packages.debian.org/
+DebianPTS        http://packages.qa.debian.org/
+Dictionary       http://www.dict.org/bin/Dict?Database=*&Form=Dict1&Strategy=*&Query=
+Google           http://www.google.com/search?q=
+lmgtfy           http://lmgtfy.com/?q= # Well, just search for "$1", follow the link to see how to do it...
+GoogleGroups     http://groups.google.com/group/$1/msg/$2        # Message $2 in $1 Google Group
+gdiscussion      https://groups.google.com/d/topic/$1/$2/discussion # Discussion $2 in $1 Google 
+gmessage         https://groups.google.com/d/msg/$1/$2 # Message $2 in $1 Google Group
+JargonFile       http://downlode.org/perl/jargon-redirect.cgi?term=
+MeatBall         http://www.usemod.com/cgi-bin/mb.pl?
+MetaWiki         http://sunir.org/apps/meta.pl?
+MetaWikiPedia    http://meta.wikipedia.org/wiki/
+MoinMoin         http://moinmo.in/
+TracHacks        http://trac-hacks.org/wiki/
+OSM              http://www.openstreetmap.org/wiki/
+WhoIs            http://www.whois.sc/
+Why              http://clublet.com/c/c/why?
+c2Wiki           http://c2.com/cgi/wiki?
+WikiPedia        http://en.wikipedia.org/wiki/
+}}}
+
+
+----
+See also: InterWiki, InterTrac

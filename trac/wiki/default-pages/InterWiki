@@ -1,0 +1,81 @@
+= InterWiki リンク = #SupportforInterWikilinks
+
+''([trac:milestone:0.10 milestone:0.10] 以降)''
+
+== 定義 == #Definition
+
+InterWiki リンクは Trac 以外の Wiki システムにある Wiki ページを参照するために
+使用します。応用的な使用法になりますが、 Trac 以外の Web アプリケーションが
+提供するリソースのうち、シンプルな URL マッピングが行えるものであれば
+参照することができます。
+
+極端な例では、 InterWiki プレフィックスは新しいプロトコル
+([trac:TortoiseSvn TortoiseSvn] で使用される `tsvn:`など) へのリンクを簡単に導入するために使うこともできます。
+
+== リンクのシンタックス == #LinkSyntax
+
+{{{
+<対象の Wiki>(:<識別子>)+
+}}}
+
+リンクは対象の Wiki (もしくはシステム) 名に
+コロンをつけたもの (例 `MeatBall:`)
+に続いて、詳細を指定します。
+InterTrac のプレフィックスと同様に、 '''InterWiki のプレフィックスも大文字 / 小文字を区別しない''' ことを気をつけてください。
+
+対象の Wiki の URL は TracIni の`[interwiki]` セクションや Wiki ページ InterMapTxt に記載されています。このページは MeatBall:InterMapTxt を参考にしています。`[interwiki]` セクションと InterMapTxt に同じプレフィックスが定義されている場合は、 `[interwiki]` セクションに定義されているものが有効になります。
+
+さらに、従来の (訳注: MeatBall:InterMapTxt の) InterWiki リンクでは、
+識別子が単に URL に ''追加'' されるだけでしたが、
+Trac ではパラメータつきの InterWiki URL が使用できます:
+(訳注: InterMapTxt に定義した) URL に含まれる `$1`, `$2` などは、
+対応する引数に置き換えられます。
+引数はリンクの識別子に ":" で区切ったリスト形式で
+指定します。
+
+=== [interwiki] === #[interwiki]
+TracIni の `[interwiki]` セクションのオプションはそれぞれ InterWiki のプレフィックスを定義しています。オプション名がプレフィックスとなります。オプションの値には URL を定義しています。 URL の後に余白を入れ、説明文を任意で記述することが出来ます。パラメータの URL も同様にサポートします。
+
+'''例:'''
+{{{
+[interwiki]
+MeatBall = http://www.usemod.com/cgi-bin/mb.pl?
+PEP = http://www.python.org/peps/pep-$1.html Python Enhancement Proposal $1
+tsvn = tsvn: Interact with TortoiseSvn
+}}}
+
+== 例 == #Examples
+
+以下に抜粋した InterMapTxt ページの場合:
+
+{{{
+= InterMapTxt =
+== InterWiki のプレフィックスを定義するページです ==
+
+現在利用できるプレフィックスのリスト: [[InterWiki]]
+
+このページは MeatBall:InterMapTxt ページをモデルとしています。
+Trac ではマッピング文字列の後ろに任意のコメントをつけることができます。
+----
+{{{
+PEP      http://www.python.org/peps/pep-$1.html           # Python Enhancement Proposal $1
+Trac-ML  http://thread.gmane.org/gmane.comp.version-control.subversion.trac.general/$1  # Message $1 in Trac Mailing List
+
+tsvn     tsvn:                                            # Interact with TortoiseSvn
+...
+MeatBall http://www.usemod.com/cgi-bin/mb.pl?
+MetaWiki http://sunir.org/apps/meta.pl?
+MetaWikiPedia http://meta.wikipedia.org/wiki/
+MoinMoin http://moinmoin.wikiwikiweb.de/
+...
+}}}
+}}}
+
+以下のように使用します
+ * `MoinMoin:InterWikiMap` は MoinMoin:InterWikiMap と表示されます
+   リンクの ''タイトル'' は "!InterWikiMap in !MoinMoin" と表示されます
+ * `Trac-ML:4346` は Trac-ML:4346 と表示されます
+   リンクの ''タイトル'' は "Message 4346 in Trac Mailing List" と表示されます
+
+----
+See also: InterTrac, InterMapTxt

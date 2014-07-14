@@ -1,0 +1,40 @@
+= Welcome to Trac 1.0 =
+
+Trac は '''ソフトウェア開発プロジェクト''' のマネージメントにおける '''最小限の''' アプローチを提供する '''Web アプリケーション''' です。
+ソフトウェア開発の上でのチケット解決、機能追加、およびすべての工程において、効果的なトラッキングとハンドリングを簡素化することを目標としています。
+
+Trac の全てのアスペクトは、一つの目標のもとに設計されています。 
+'''古びた方法でプロジェクトを運営して''' いる、 '''ソフトウェア開発者の助けとなること''' 。
+そのために、チームが既に確立している開発プロセスと開発ポリシーに
+影響をなるべく与えないこと。
+
+全てを Wiki ページとして -- このページも例外ではありません。
+単なる Web ブラウザからこのページのコンテンツを編集することができます。
+ページの下の方にある "このページを編集" というボタンをクリックするだけです。 
+WikiFormatting に使用できる Wiki マークアップの詳細な記述がありますので
+参考にしてください。
+
+"[wiki:TracAdmin trac-admin] ''yourenvdir'' initenv" コマンドの実行によって、
+新しい Trac Environment が作成されます。これには Wiki ページのデフォルトセット他、サンプルが
+含まれています。この新しい Trac Environment にも、 [wiki:TracGuide documentation] が
+含まれていますので、あなたのプロジェクトでも導入の手引きとなるでしょう。
+
+また [wiki:TracAdmin trac-admin] を使用することによって
+特に''コンポーネント''、''バージョン''、''マイルストーン''等が、プロジェクトにフィットするように 
+[http://trac.edgewall.org/ Trac] を構成することが出来ます。
+
+
+まずは TracGuide から読み進めるとよいでしょう。
+
+Enjoy! [[BR]]
+''The Trac Team''
+
+== スタートポイント == #StartingPoints
+
+ * TracGuide --  同梱ドキュメント
+ * [http://trac.edgewall.org/ The Trac project] -- Trac Open Source Project
+ * [trac:TracFaq Trac FAQ] -- よくある質問とその回答
+ * TracSupport --  サポートを受けるための方法
+ * TracJa -- 日本語化情報
+
+この Wiki ページの完全なリストは、 TitleIndex をご覧下さい。

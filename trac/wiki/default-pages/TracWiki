@@ -1,0 +1,34 @@
+
+= Trac Wiki システム = #TheTracWikiSystem
+[[TracGuideToc]]
+
+Trac には Wiki システムが組み込まれています。直感的で簡単なマークアップ言語を使用して [WikiNewPage ページを作成する] ことで、非常に柔軟な方法で情報や知識をまとめることができます。このマークアップテキストは [wiki:TitleIndex Wiki ページ] だけでなく、[wiki:TracTickets チケット] の概要やコメント、[wiki:TracChangeset コミットログメッセージ]、[wiki:TracRoadmap マイルストーン] の詳細、[wiki:TracReports レポート] の詳細の記述、更には拡張機能内でも使用することができます。
+この組み込みエンジンによってすべての Trac モジュールで書式付きテキストとハイパーリンクを使用することができます。
+
+Wiki テキストの編集はとても簡単です。どの Web ブラウザも使用でき、 HTML のようなもっと複雑なマークアップ言語に比べるとシンプルな [WikiFormatting 書式体系] です。 Wiki が設計された背景には、 HTML はネスト可能なタグの数が膨大でかつとても複雑なので、速いペースで編集することができず、ページの実質的な内容を把握し難いという理由があったからです。それでも Trac はマークアップの別手段として、 [WikiHtml HTML], [WikiRestructuredText reStructuredText], [http://www.textism.com/tools/textile/ Textile] にも対応しています。これらはページの一部(wiki ブロック)で使用することができます。
+
+Wiki が目指しているところはテキスト編集をより簡単にし、人々にプロジェクトのための情報を提供し、その内容に注釈をつけることを '''奨励する''' ことです。 Trac はまた Wiki 文法をもっと使いやすくするための簡単なツールバーを提供しています。そして、ブラウザの [http://universaleditbutton.org/Universal_Edit_Button ユニバーサルエディットボタン] をサポートします。
+
+Wiki そのものはどんな仕組みも押し付けません。何も書いていない紙の束に似ています。あなたがふさわしいと思う情報や文書をまとめることができ、必要に応じて後でまとめなおすことができます。
+Wiki に投稿することは本質的にはハイパーリンクをビルドすることなので、
+HTML に関する一般的な助言についてもここで扱います。
+例えば、 ''[http://www.w3.org/Provider/Style オンライン・ハイパーテキストのためのスタイルガイド]'' には
+[http://www.w3.org/Provider/Style/Structure.html 作品全体の構造] についての考え方や
+情報を [http://www.w3.org/Provider/Style/WithinDocument.html 各ドキュメントに] まとめる方法について説明されています。最も重要な tip として、 “ あなたがリンクをたどっていなかったとしても、読むことができる HTML ページにしよう” ということです。
+
+詳細について:
+ * WikiFormatting のルール。WikiMacros や WikiProcessors のような上級者向けルールも含みます
+ * WikiPageNames の使用方法。TracLinks の他の書式、すなわちもっと細かな方法で Trac 内のいろいろなリソースを参照する方法
+
+もし Wiki テキストを編集する練習をしたいならば、SandBox を使用してください。Note: 誰でもすべての Trac Wiki を編集できるわけではありません。プロジェクトの方針によります。Trac の管理者に確認してください。
+
+変更を保存する前に、そのページを ''プレビュー'' することや、あなたが行なった ''変更を確認'' することができます。
+''並べて編集'' モードを有効にしタイピングすると、書式のプレビューが自動的に表示されます(設定を反映させるには一度プレビューを見る必要があります)。 ''編集をしたタイミングと、プレビューが自動的に更新されるタイミングについて [wiki:/TracIni#trac-section 遅延設定] が可能です。''
+
+Web 上のその他の情報について:
+ * 有名な Wiki 百科事典における [http://wikipedia.org/wiki/Wiki Wiki] の定義
+ * Wiki の [http://c2.com/cgi/wiki?WikiHistory 歴史]
+ * [http://www.usemod.com/cgi-bin/mb.pl?WhyWikiWorks なぜ wiki は動くのか] を説明した Wiki ページ
+
+----
+See also: TracGuide

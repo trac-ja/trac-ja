@@ -1,0 +1,254 @@
+= Wiki プロセッサ = #WikiProcessors
+
+プロセッサは [WikiMacros Wiki マクロ] の一種です。 [TracWiki Trac Wiki エンジン] 以外のマークアップフォーマットを使用するために設計されています。プロセッサは ''ユーザが編集したテキストを処理するマクロ機能'' と考えることができます。
+
+Trac 内の全ての Wiki テキストにおいて、 Wiki プロセッサを使用することができます。
+例えば、以下に述べる様々な用途で使用することができます:
+ - [#CodeHighlightingSupport シンタックスハイライト] またはテキストを逐語的にレンダリングする
+ -  <div> ブロックや <span> や <td>, <th> のテーブルのセルの内容など
+   [#HTMLrelated コンテキスト内の Wiki のマークアップ] をレンダリングする
+ - [wiki:WikiHtml HTML] や
+   [wiki:WikiRestructuredText Restructured テキスト]
+   または [http://www.textism.com/tools/textile/ textile] のシンタックスをマークアップの代替手段として使用する
+
+
+== プロセッサを使用する == #UsingProcessors
+
+テキストブロック上に Wiki プロセッサを適用するには、
+最初のデリミタとして Wiki の ''コードブロック'' を使用します:
+{{{
+{{{
+これらの行は
+処理されるでしょう...
+}}}
+}}}
+
+`{{{` のすぐ後または直後の行に,
+`#!` に続けて ''プロセッサ名'' を追加します。
+
+{{{
+{{{
+#!プロセッサ名
+これらの行は
+処理されるでしょう...
+}}}
+}}}
+
+これはほとんどの UNIX ユーザにはおなじみである "shebang" を用いた表記法です。
+
+これらの内容に加えて、いくつかの Wiki プロセッサでは、
+プロセッサ名に続けて同じ行に、 `key=value` のペアを書くことによって、
+''パラメータ'' を許容するものがあります。もし、 `value` にスペースが含まれるケースがたびたび起こるようであれば、
+クオテーションで囲んだ文字列を使用することができます (`key="スペースが含まれている文字列"`) 。
+
+いくつかのプロセッサは Wiki のマークアップを処理することを意味するので、
+プロセッサのブロックを ''ネスト'' させることができます。
+可読性を向上させるためにネストしたブロックの内容をインデントさせたいと思うかもしれません。
+この種のインデントは中身を処理する際に無視されます。
+
+
+== 例 ==
+
+||= Wiki マークアップ =||= 表示 =||
+{{{#!td colspan=2 align=center style="border: none"
+
+                __例 1__: HTML を挿入する
+}}}
+|-----------------------------------------------------------------
+{{{#!td style="border: none"
+{{{
+{{{
+#!html
+<h1 style="color: grey">HTML テスト</h1>
+}}}
+}}}
+}}}
+{{{#!td valign=top style="border: none; padding-left: 2em"
+{{{
+#!html
+<h1 style="color: grey">HTML テスト</h1>
+}}}
+}}}
+|-----------------------------------------------------------------
+{{{#!td colspan=2 align=center style="border: none"
+
+     __例 2__: <div> ブロック内のカスタマイズしたスタイルシートでハイライトした Python のコード
+}}}
+|-----------------------------------------------------------------
+{{{#!td style="border: none"
+  {{{
+  {{{#!div style="background: #ffd; border: 3px ridge"
+
+  これは 埋め込まれた "コード" ブロックの例です:
+
+    {{{
+    #!python
+    def hello():
+        return "world"
+    }}}
+
+  }}}
+  }}}
+}}}
+{{{#!td valign=top style="border: none; padding: 1em"
+  {{{#!div style="background: #ffd; border: 3px ridge"
+
+  これは 埋め込まれた "コード" ブロックの例です:
+
+    {{{
+    #!python
+    def hello():
+        return "world"
+    }}}
+
+  }}}
+}}}
+|-----------------------------------------------------------------
+{{{#!td colspan=2 align=center style="border: none"
+
+     __例 3__: Wiki ページでチケットのキーワード検索を行なう
+}}}
+|-----------------------------------------------------------------
+{{{#!td style="border: none"
+  {{{
+  {{{
+  #!html
+  <form action="/query" method="get"><div>
+  <input type="text" name="keywords" value="~" size="30"/>
+  <input type="submit" value="キーワードで検索"/>
+  <!-- To control what fields show up use hidden fields
+  <input type="hidden" name="col" value="id"/>
+  <input type="hidden" name="col" value="summary"/>
+  <input type="hidden" name="col" value="status"/>
+  <input type="hidden" name="col" value="milestone"/>
+  <input type="hidden" name="col" value="version"/>
+  <input type="hidden" name="col" value="owner"/>
+  <input type="hidden" name="col" value="priority"/>
+  <input type="hidden" name="col" value="component"/>
+  -->
+  </div></form>
+  }}}
+  }}}
+}}}
+{{{#!td valign=top style="border: none; padding: 1em"
+  {{{
+  #!html
+  <form action="/query" method="get"><div>
+  <input type="text" name="keywords" value="~" size="30"/>
+  <input type="submit" value="キーワードで検索"/>
+  <!-- To control what fields show up use hidden fields
+  <input type="hidden" name="col" value="id"/>
+  <input type="hidden" name="col" value="summary"/>
+  <input type="hidden" name="col" value="status"/>
+  <input type="hidden" name="col" value="milestone"/>
+  <input type="hidden" name="col" value="version"/>
+  <input type="hidden" name="col" value="owner"/>
+  <input type="hidden" name="col" value="priority"/>
+  <input type="hidden" name="col" value="component"/>
+  -->
+  </div></form>
+  }}}
+}}}
+== プロセッサ一覧 == #AvailableProcessors
+
+以下のプロセッサが Trac の配布に含まれています:
+
+|| '''`#!default`''' || フォーマット済みのテキストブロック内でテキストを逐語的に表示する。これはプロセッサ名を指定 ''しない'' のと同じです (さらに `#!` を指定しないのと同じです)。 ||
+|| '''`#!comment`''' || このセクション内のテキストを処理しません (つまり、このセクションの内容はプレインテキスト内にのみ存在します - レンダリングしたページには表示されません)。 ||
+|||| ||
+||||= '''HTML 関連''' =||
+|| '''`#!html`''' || Wiki ページにカスタムした HTML を挿入する。 ||
+|| '''`#!htmlcomment`''' || Wiki ページに HTML のコメントを挿入する (''0.12 以降'') 。 ||
+|| || `#!html` ブロックは ''自己完結型'' でなければなりません。つまり、1つ目のブロックである HTML 要素を開始し、後に記述する2つ目のブロックでその要素を閉じるということはできません。これに類似した効果を得るためには、下記に述べるプロセッサを使用して下さい。  ||
+|| '''`#!div`''' || <div> 要素内の任意の Wiki の内容をラップする (''0.11 以降'') 。 ||
+|| '''`#!span`''' || <span> 要素内の任意の Wiki の内容をラップする (''0.11 以降'') 。 ||
+|| '''`#!td`''' || <td> 要素内の任意の Wiki の内容をラップする (''0.12 以降'') 。 ||
+|| '''`#!th`''' || <th> 要素内の任意の Wiki の内容をラップする (''0.12 以降'') 。 ||
+|| '''`#!tr`''' || `#!td` や `#!th` ブロックをラッピングしたり、グルーピングした列を見やすくするために属性を指定する際、オプションとして使用することができます (''0.12 以降'') 。 ||
+|| || これらのプロセッサについての詳細と使用例については、 WikiHtml を参照して下さい。 ||
+|||| ||
+||||= '''その他のプロセッサ''' =||
+|| '''`#!rst`''' || Trac における Restructured テキストのサポート。WikiRestructuredText 参照。 ||
+|| '''`#!textile`''' || [http://cheeseshop.python.org/pypi/textile Textile] がインストールされている場合のサポート。 [http://www.textism.com/tools/textile/ a Textile リファレンス] 参照。 ||
+|||| ||
+||||= '''コードのハイライトのサポート''' =||
+|| '''`#!c`''' [[BR]] '''`#!cpp`''' (C++) [[BR]] '''`#!python`''' [[BR]] '''`#!perl`''' [[BR]] '''`#!ruby`''' [[BR]] '''`#!php`''' [[BR]] '''`#!asp`''' [[BR]] '''`#!java`''' [[BR]] '''`#!js`''' (Javascript) [[BR]] '''`#!sql`''' [[BR]] '''`#!xml`''' (XML or HTML) [[BR]] '''`#!sh`''' (!Bourne/Bash shell) [[BR]] '''etc.''' [[BR]] || Trac は、さまざまなプログラミング言語のソースコードに対応するインラインのシンタックスハイライトを提供するプロセッサを同梱しています。[[BR]] [[BR]] Trac では、シンタックスのカラーリングについて外部のソフトウェア (例えば [http://pygments.org Pygments]) に依存しています。[[BR]] [[BR]] サポートしている言語の情報と他の言語のサポートを有効にする方法については TracSyntaxColoring を参照してください。 ||
+|||| ||
+||||= '''MIME タイププロセッサ''' =||
+|||| プロセッサに MIME タイプを使用することによって、ソースコードをブラウズするとき、サポートしている言語に対してシンタックスハイライトを適用することが可能です。 ||
+{{{#!tr
+{{{#!td
+例:
+ {{{
+{{{
+#!text/html
+<h1>テキスト</h1>
+}}}
+ }}}
+}}}
+{{{#!td
+この結果はシンタックスハイライトされた HTML コードになります:
+ {{{
+#!text/html
+<h1>テキスト</h1>
+ }}}
+
+これは、すべての [TracSyntaxColoring#SyntaxColoringSupport 対応している MIME タイプ] に対して有効です。
+}}}
+}}}
+{{{#!td
+ {{{
+{{{
+#!diff
+--- Version 55
++++ Version 56
+@@ -115,8 +115,9 @@
+     name='TracHelloWorld', version='1.0',
+     packages=find_packages(exclude=['*.tests*']),
+-    entry_points = """
+-        [trac.plugins]
+-        helloworld = myplugs.helloworld
+-    """,
++    entry_points = {
++        'trac.plugins': [
++            'helloworld = myplugs.helloworld',
++        ],
++    },
+ )
+}}}
+ }}}
+}}}
+{{{#!td
+'''`#!diff`''' は細部までレンダリングします:
+ {{{
+#!diff
+--- Version 55
++++ Version 56
+@@ -115,8 +115,9 @@
+     name='TracHelloWorld', version='1.0',
+     packages=find_packages(exclude=['*.tests*']),
+-    entry_points = """
+-        [trac.plugins]
+-        helloworld = myplugs.helloworld
+-    """,
++    entry_points = {
++        'trac.plugins': [
++            'helloworld = myplugs.helloworld',
++        ],
++    },
+ )
+ }}}
+}}}
+
+ユーザによるプロセッサマクロの開発やコントリビュート:
+ * [trac:ProcessorBazaar]
+ * [trac:MacroBazaar]
+ * [http://trac-hacks.org/ Trac Hacks] コミュニティサイト
+
+プロセッサは Wiki マクロを開発するのと変わりはありません。
+実際、開発方法は同じであり、シンタックスの使用方法のみが異なります。
+詳細情報については、 [WikiMacros#DevelopingCustomMacros カスタムマクロを開発する] を参照して下さい。
+
+
+----
+See also: WikiMacros, WikiHtml, WikiRestructuredText, TracSyntaxColoring, WikiFormatting, TracGuide
